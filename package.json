@@ -1,0 +1,8 @@
+{
+  "name": "js-jhptdv",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "ol": "^6.3.1"
+  }
+}
