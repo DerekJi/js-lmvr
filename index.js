@@ -53,7 +53,11 @@ map.getView().on('change:resolution', function(event) {
 document.getElementById('btnFetch').onclick = function() {
   console.log('fetch');
   var graphicUrl = wmsSource.getLegendUrl(resolution);
-  fetch(graphicUrl) 
+  var options = {
+    method: 'GET', // *GET, POST, PUT, DELETE, etc.
+    mode: 'no-cors',
+  };
+  fetch(graphicUrl, options) 
     .then(function() {
         console.log('success');
     })
