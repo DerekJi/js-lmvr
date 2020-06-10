@@ -46,3 +46,18 @@ map.getView().on('change:resolution', function(event) {
   var resolution = event.target.getResolution();
   updateLegend(resolution);
 });
+
+/**
+ * Fetch legend using fetch() manually
+ */
+document.getElementById('btnFetch').onclick = function() {
+  console.log('fetch');
+  var graphicUrl = wmsSource.getLegendUrl(resolution);
+  fetch(graphicUrl) 
+    .then(function() {
+        console.log('success');
+    })
+    .catch(function() {
+        console.log('error');
+    });
+};
