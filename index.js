@@ -47,21 +47,76 @@ map.getView().on('change:resolution', function(event) {
   updateLegend(resolution);
 });
 
+var options = {
+  method: 'GET', // *GET, POST, PUT, DELETE, etc.
+  mode: 'no-cors',
+  headers: {
+    'Content-Type': 'text/plain',
+    'Accept': '*/*'
+  }
+};
+
+var xmlapi = 'https://lsageoserver.geohub.sa.gov.au/locsa/wms?service=wms&version=1.3.0&format=text/xml&request=GetCapabilities';
+
+/**
+ * Reset log panel
+ */
+document.getElementById('btnReset').onclick = function() {
+  document.getElementById('log').innerText = '';
+}
+
+document.getElementById('btnFetchXmlNoCors').onclick = function() {
+  fetchXml(xmlapi, true);
+}
+
+document.getElementById('btnFetchXml').onclick = function() {
+  fetchXml(xmlapi, false);
+}
+
 /**
  * Fetch legend using fetch() manually
  */
-document.getElementById('btnFetch').onclick = function() {
-  console.log('fetch');
+document.getElementById('btnFetchLegend').onclick = function() {
+  log('\r\nFetching legend ...');
   var graphicUrl = wmsSource.getLegendUrl(resolution);
-  var options = {
-    method: 'GET', // *GET, POST, PUT, DELETE, etc.
-    mode: 'no-cors',
-  };
   fetch(graphicUrl, options) 
-    .then(function() {
-        console.log('success');
+    .then(function(response) {
+      log('response success');
+      return response.blob();
     })
-    .catch(function() {
-        console.log('error');
+    .then(function(blob) {
+      log('parsing blob() done');
+      log(JSON.stringify(blob));
+    })
+    .catch(function(err) {
+      log('error!' + JSON.stringify(err));
     });
 };
+
+/**
+ * Fetch XML from an endpoint
+ */
+function fetchXml(url, noCors) {
+  options.mode = noCors ? 'no-cors' : 'cors';
+  log('\r\nFetching XML ' + options.mode + ' ...');
+  fetch(url, options)
+      .then(function (response) {
+        log('response success');
+        return response.text();
+      })
+      .then(function (text) {
+        log('parsing text() done');
+        log(text);
+      })
+      .catch(function (err) {
+        log("ERROR: Something went wrong! " + JSON.stringify(err));
+      })
+  ;
+}
+
+function log(text) {
+    var content = document.getElementById('log').innerText;
+    content += content ? '\r\n' : '';
+    content += text || '(empty)';
+    document.getElementById('log').innerText = content;
+}
