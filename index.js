@@ -51,7 +51,6 @@ var options = {
   method: 'GET', // *GET, POST, PUT, DELETE, etc.
   mode: 'no-cors',
   headers: {
-    'Content-Type': 'text/plain',
     'Accept': '*/*'
   }
 };
